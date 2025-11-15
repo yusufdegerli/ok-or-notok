@@ -1,0 +1,45 @@
+# docker-compose.yml
+services:
+  # 1. PostgreSQL Veritabanı Servisi
+  db:
+    image: postgres:14-alpine
+    container_name: postgres_db
+    restart: always
+    environment:
+      # db.js dosyanızdaki değerlerle eşleşmeli
+      POSTGRES_USER: movie_user
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: ok_or_notokdb
+    ports:
+      # Host makineden erişim için (isteğe bağlı)
+      - "5432:5432"
+    volumes:
+      # Verilerinizi kalıcı olarak saklamak için
+      - postgres_data:/var/lib/postgresql/data
+
+  # 2. Node.js Backend Servisi
+  backend:
+    build: .
+    container_name: node_backend
+    restart: always
+    ports:
+      # Flutter'ın erişeceği host portu
+      - "4000:4000"
+    depends_on:
+      # DB servisi başlamadan başlamaz
+      - db
+    environment:
+      # Backend, DB'ye erişmek için servis adını (db) kullanır
+      DB_HOST: db 
+      DB_PORT: 5432
+      DB_USER: movie_user
+      DB_PASSWORD: 12345
+      DB_NAME: ok_or_notokdb
+      PORT: 4000
+      JWT_SECRET: supersecretkey123456789
+      TMDB_API_KEY: 82df5b0cc738f43d05f963d6f03ff64b
+      DOCKER_CONTAINER: "true"
+    command: sh -c "node src/initDB.js && node index.js"
+
+volumes:
+  postgres_data:

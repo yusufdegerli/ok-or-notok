@@ -1,0 +1,11 @@
+#!/bin/bash
+echo "Docker container içindeki PostgreSQL'e bağlanmak için:"
+echo ""
+echo "1. Container içine bağlan:"
+echo "   docker exec -it postgres_db psql -U movie_user -d ok_or_notokdb"
+echo ""
+echo "2. Veya doğrudan komut çalıştır:"
+echo "   docker exec -it postgres_db psql -U movie_user -d ok_or_notokdb -c '\\dt'"
+echo ""
+echo "3. Tabloları listelemek için:"
+echo "   docker exec -it postgres_db psql -U movie_user -d ok_or_notokdb -c 'SELECT table_name FROM information_schema.tables WHERE table_schema = '\''public'\'';'"
